@@ -1,0 +1,286 @@
+\documentclass[10pt,a4paper]{article}
+
+% Encodage et langue
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% Mise en page
+\usepackage{geometry}
+\geometry{hmargin=2.2cm, vmargin=2.2cm}
+\usepackage{setspace}
+\setstretch{1.05}
+\usepackage{fancyhdr}
+\setlength{\headheight}{14pt}
+\usepackage{titlesec}
+
+% Tableaux et couleurs
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\definecolor{SectionColor}{RGB}{0,76,153}
+\definecolor{SoftBlue}{RGB}{238,244,252}
+\definecolor{SoftGray}{RGB}{245,246,248}
+
+\titleformat{\section}
+  {\color{SectionColor}\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}
+  {\color{SectionColor}\normalfont\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\setlist[itemize]{
+  leftmargin=0.7cm,
+  itemsep=0.15em,
+  topsep=0.2em,
+  parsep=0pt
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{Maintenance Prédictive Industrielle}}
+\rhead{\textbf{Version 1.0}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\important}[1]{\textbf{\color{SectionColor}#1}}
+
+\begin{document}
+
+% =========================
+% Page de garde conservee
+% =========================
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\vspace*{2.5cm}
+
+{\Huge\bfseries CAHIER DES CHARGES\par}
+\vspace{0.8cm}
+{\LARGE\bfseries Application de Maintenance Prédictive\par}
+{\LARGE\bfseries Industrielle\par}
+
+\vspace{1.2cm}
+{\large Version 1.0\par}
+
+\vspace{1.4cm}
+\begin{flushleft}
+\hspace{2.4cm}--- Étudiante: LAHDILI Hassna\\[0.18cm]
+\hspace{2.4cm}--- École: Faculté Polydisciplinaire de Beni Mellal\\[0.18cm]
+\hspace{2.4cm}--- Filière: Data Science et Sécurité des Systèmes d'Information\\[0.18cm]
+\hspace{2.4cm}--- Tuteur entreprise: SERBOUTI Ibtissam\\[0.18cm]
+\hspace{2.4cm}--- Tuteur académique: MAARIR Abdelkrim\\[0.18cm]
+\hspace{2.4cm}--- Durée: 4 mois (du 02 mars 2026 au 29 juin 2026)\\[0.18cm]
+\hspace{2.4cm}--- Objectif pédagogique: Développer une application de maintenance prédictive industrielle
+\end{flushleft}
+
+\vfill
+\begin{flushleft}
+\hspace{2.4cm}\textbf{Entreprise :} RAYNOV\\[0.25cm]
+\hspace{2.4cm}\textbf{Date :} 20 avril 2026\\[0.25cm]
+\hspace{2.4cm}\textbf{Statut :} À valider
+\end{flushleft}
+\end{titlepage}
+
+\setcounter{page}{1}
+\small
+
+% =========================
+% Page 1 du resume
+% =========================
+\section{Résumé exécutif}
+
+\important{But de l'application.}
+L'application réalisée est une plateforme web de maintenance prédictive industrielle.
+Elle aide le responsable maintenance à surveiller l'état des machines, détecter les risques de panne, générer des alertes et suivre les interventions avant qu'un arrêt de production ne se produise.
+
+\vspace{0.2cm}
+\important{Problème traité.}
+Dans une organisation industrielle, les pannes imprévues provoquent des arrêts coûteux.
+La maintenance classique est souvent corrective ou préventive selon un calendrier fixe.
+L'objectif du projet est de passer vers une maintenance pilotée par les données, les règles métier et l'intelligence artificielle.
+
+\vspace{0.2cm}
+\important{Objectifs principaux.}
+\begin{itemize}
+  \item Anticiper les pannes avec une cible d'au moins 7 jours d'avance.
+  \item Réduire les arrêts non planifiés et améliorer la disponibilité des équipements.
+  \item Centraliser les machines, capteurs, prédictions, alertes et interventions dans une même interface.
+  \item Transformer l'expertise métier en règles exploitables par le modèle IA.
+\end{itemize}
+
+\subsection{Ce que le responsable peut comprendre rapidement}
+
+\rowcolors{2}{SoftGray}{white}
+\begin{tabularx}{\textwidth}{p{3.2cm}Y}
+\toprule
+\rowcolor{SoftBlue}
+\textbf{Besoin} & \textbf{Réponse apportée par l'application} \\
+\midrule
+Superviser le parc & Dashboard avec KPIs, nombre de machines, alertes actives, machines à risque et état global du parc. \\
+Détecter les risques & Analyse des données capteurs, application de règles métier et calcul de probabilité de panne. \\
+Réagir aux alertes & Génération d'alertes par niveau de gravité, accusé de réception et historique de traitement. \\
+Suivre les équipements & Gestion des machines, détails techniques, historique capteurs, prédictions et interventions. \\
+Piloter l'IA & Page ML pour consulter les datasets, diagnostics, performances, drift, explications et retraining. \\
+\bottomrule
+\end{tabularx}
+
+\newpage
+
+% =========================
+% Page 2 du resume
+% =========================
+\section{Fonctionnement général}
+
+\subsection{Chaîne de fonctionnement}
+
+\begin{enumerate}[leftmargin=0.8cm,itemsep=0.2em]
+  \item L'utilisateur se connecte avec son compte sécurisé.
+  \item Les machines industrielles sont créées et organisées par site, zone, ligne et composant.
+  \item Les mesures capteurs sont enregistrées: température, vibration, pression, vitesse, courant, etc.
+  \item Les règles métier sont évaluées pour repérer les situations anormales.
+  \item Les résultats des règles deviennent des variables d'entrée pour le modèle IA.
+  \item Le modèle calcule le risque de panne et le délai estimé avant défaillance.
+  \item Les alertes sont créées, affichées, historisées et traitées par les utilisateurs autorisés.
+\end{enumerate}
+
+\subsection{Modules fonctionnels essentiels}
+
+\rowcolors{2}{SoftGray}{white}
+\begin{tabularx}{\textwidth}{p{3.5cm}Y}
+\toprule
+\rowcolor{SoftBlue}
+\textbf{Module} & \textbf{Rôle dans l'application} \\
+\midrule
+Connexion & Protège l'accès avec authentification JWT et rôles utilisateurs. \\
+Dashboard & Donne une vue temps réel du parc: KPIs, statuts, risques, alertes et évolution des probabilités de panne. \\
+Machines & Permet de créer, modifier, consulter et organiser les équipements industriels. \\
+Règles métier & Permet de définir des seuils et conditions de détection adaptés aux types de machines. \\
+Alertes & Centralise les alertes prédictives, leur niveau de gravité, leur statut et leur accusé de réception. \\
+Operations & Suit les actifs, interventions terrain, jobs d'ingestion et retours utilisés par la boucle MLOps. \\
+ML & Présente les datasets, benchmarks, diagnostics, explications locales, drift et relance d'entraînement. \\
+Utilisateurs & Gère les comptes et droits, réservé principalement à l'administrateur. \\
+\bottomrule
+\end{tabularx}
+
+\subsection{Machines couvertes}
+
+Le cahier des charges prévoit les machines industrielles suivantes: moteur, pompe, convoyeur, compresseur, ventilateur, générateur et broyeur.
+L'application réalisée ajoute aussi le type \textit{four}, utile pour couvrir des cas industriels thermiques.
+
+\newpage
+
+% =========================
+% Page 3 du resume
+% =========================
+\section{Intelligence métier et IA}
+
+\subsection{Principe retenu}
+
+L'application ne s'appuie pas uniquement sur un modèle IA.
+Elle combine d'abord les règles métier issues de l'expertise terrain, puis utilise ces résultats pour enrichir la prédiction.
+Cette approche rend le système plus compréhensible pour les responsables et plus utile pour les techniciens.
+
+\rowcolors{2}{SoftGray}{white}
+\begin{tabularx}{\textwidth}{p{3.4cm}Y}
+\toprule
+\rowcolor{SoftBlue}
+\textbf{Étape} & \textbf{Explication} \\
+\midrule
+Règles métier & Exemple: température moteur trop élevée, vibration excessive, pression anormale, chute RPM. \\
+Features IA & Les règles produisent un score de sévérité, un nombre de règles déclenchées, une marge au seuil et une confiance. \\
+Prédiction & Le modèle estime la probabilité de panne, le niveau d'alerte et le risque machine. \\
+Retour terrain & Les interventions et labels permettent d'améliorer progressivement le modèle. \\
+\bottomrule
+\end{tabularx}
+
+\subsection{Données utilisées}
+
+\begin{itemize}
+  \item Données capteurs: température, vibrations, pression, vitesse de rotation, courant et timestamp.
+  \item Données métier: type de machine, site, statut, règles actives, alertes et interventions.
+  \item Données IA: probabilité de panne, niveau de risque, explication de prédiction et diagnostic modèle.
+\end{itemize}
+
+\subsection{Niveaux d'alerte}
+
+\rowcolors{2}{SoftGray}{white}
+\begin{tabularx}{\textwidth}{p{3cm}p{4cm}Y}
+\toprule
+\rowcolor{SoftBlue}
+\textbf{Niveau} & \textbf{Seuil indicatif} & \textbf{Action attendue} \\
+\midrule
+Faible & Risque supérieur à 20\% & Surveillance. \\
+Moyen & Risque supérieur à 40\% & Vérification planifiée. \\
+Élevé & Risque supérieur à 60\% & Intervention à préparer. \\
+Critique & Risque supérieur à 80\% & Action rapide et suivi prioritaire. \\
+\bottomrule
+\end{tabularx}
+
+\section{Sécurité et droits}
+
+L'accès est organisé par rôles: administrateur, technicien, expert et lecteur.
+Les actions sensibles sont limitées: suppression de machine, gestion utilisateurs, modification des règles et consultation des logs.
+Les mots de passe sont protégés, les sessions utilisent JWT, et la configuration production prévoit HTTPS, CORS restrictif et paramètres de sécurité renforcés.
+
+\newpage
+
+% =========================
+% Page 4 du resume
+% =========================
+\section{Architecture, livrables et validation}
+
+\subsection{Architecture technique}
+
+\rowcolors{2}{SoftGray}{white}
+\begin{tabularx}{\textwidth}{p{3.2cm}Y}
+\toprule
+\rowcolor{SoftBlue}
+\textbf{Couche} & \textbf{Choix technique} \\
+\midrule
+Frontend & React avec Material UI pour une interface responsive et structurée. \\
+Backend & FastAPI pour exposer les API REST, gérer l'authentification, les règles, les alertes et les prédictions. \\
+Base de données & PostgreSQL pour stocker utilisateurs, machines, capteurs, alertes, prédictions, interventions et jobs. \\
+Temps réel & WebSocket pour actualiser le dashboard lorsqu'un signal ou une intervention arrive. \\
+ML/MLOps & Entraînement local, benchmarks datasets, diagnostics, drift, feedback terrain et retraining. \\
+Déploiement & Docker Compose, fichiers d'environnement, migrations Alembic et configuration production HTTPS. \\
+\bottomrule
+\end{tabularx}
+
+\subsection{Livrables principaux}
+
+\begin{itemize}
+  \item Application web complète: dashboard, machines, règles, alertes, opérations, ML et utilisateurs.
+  \item API backend documentée avec endpoints d'authentification, supervision, prédiction, alertes et MLOps.
+  \item Base PostgreSQL avec migrations et tables principales du domaine industriel.
+  \item Pipeline ML avec modèle, entraînement, diagnostics, benchmarks et réentraînement à partir des retours terrain.
+  \item Documentation projet: README, guide interface, plan de recette et configuration de déploiement.
+\end{itemize}
+
+\subsection{Critères de réussite}
+
+\rowcolors{2}{SoftGray}{white}
+\begin{tabularx}{\textwidth}{p{4.1cm}Y}
+\toprule
+\rowcolor{SoftBlue}
+\textbf{Critère} & \textbf{Résultat attendu} \\
+\midrule
+Fonctionnel & Le dashboard, les machines, les règles, les alertes, l'authentification et les prédictions fonctionnent. \\
+Performance & Dashboard sous 2 secondes et prédiction API sous 200 ms comme cible de référence. \\
+IA & Rappel cible supérieur ou égal à 80\%, anticipation moyenne de 7 jours et suivi des faux positifs. \\
+Sécurité & Accès protégé, rôles respectés, mots de passe hashés et configuration production sécurisée. \\
+Recette & Tests automatisés et checklist manuelle pour valider conformité, interface, charge et qualité IA. \\
+\bottomrule
+\end{tabularx}
+
+\subsection{Conclusion pour le responsable}
+
+Cette application fournit un outil de pilotage maintenance clair: elle surveille les machines, détecte les anomalies, prédit les risques, déclenche les alertes et conserve l'historique des décisions.
+Elle transforme les données industrielles et l'expertise métier en informations exploitables pour prioriser les interventions et réduire les arrêts imprévus.
+
+\end{document}

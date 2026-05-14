@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-04-24T11:44:10.190679",
+  "sample_size": 2400,
+  "feature_means": {
+    "temperature": 74.66604,
+    "pressure": 6.802116,
+    "rpm": 1477.660906,
+    "current": 50.012424,
+    "total_vibration": 7.993617,
+    "rule_count": 0.539167,
+    "max_rule_confidence": 0.365458,
+    "severity_score": 1.270833,
+    "temperature_margin_85": -10.33396,
+    "pressure_margin_7": -0.197884,
+    "rpm_drop_margin": -27.660906
+  }
+}

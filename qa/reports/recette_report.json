@@ -1,0 +1,220 @@
+{
+  "generated_at": "2026-04-22T15:18:41Z",
+  "base_url": "http://127.0.0.1:8010",
+  "results": [
+    {
+      "case_id": "CA-05",
+      "requirement": "Authentification admin JWT",
+      "status": "PASS",
+      "duration_ms": 314,
+      "details": {
+        "token": "***redacted***",
+        "user": {
+          "id": 1,
+          "full_name": "Admin User",
+          "email": "admin@example.com",
+          "role": "admin",
+          "is_active": true,
+          "created_at": "2026-04-21T21:16:22.262467"
+        }
+      }
+    },
+    {
+      "case_id": "CA-01",
+      "requirement": "Dashboard et KPIs",
+      "status": "PASS",
+      "duration_ms": 33,
+      "details": {
+        "total_machines": 4,
+        "available_sites": [
+          "Site 1",
+          "Site 2"
+        ],
+        "available_types": [
+          "moteur",
+          "pompe",
+          "convoyeur",
+          "compresseur",
+          "ventilateur",
+          "generateur",
+          "broyeur"
+        ]
+      }
+    },
+    {
+      "case_id": "OF-01A",
+      "requirement": "Creation utilisateur technicien",
+      "status": "PASS",
+      "duration_ms": 281,
+      "details": {
+        "user_id": 8,
+        "email": "qa.technicien.1776871058@example.com",
+        "password": "***redacted***"
+      }
+    },
+    {
+      "case_id": "OF-01B",
+      "requirement": "Connexion technicien",
+      "status": "PASS",
+      "duration_ms": 253,
+      "details": {
+        "token": "***redacted***",
+        "user": {
+          "id": 8,
+          "full_name": "QA Technicien 1776871058",
+          "email": "qa.technicien.1776871058@example.com",
+          "role": "technicien",
+          "is_active": true,
+          "created_at": "2026-04-22T15:17:38.378794"
+        }
+      }
+    },
+    {
+      "case_id": "CA-02",
+      "requirement": "CRUD machines complet",
+      "status": "PASS",
+      "duration_ms": 66,
+      "details": {
+        "reference_machine_id": 1,
+        "created_machine_id": 9
+      }
+    },
+    {
+      "case_id": "CA-06",
+      "requirement": "Regles metier",
+      "status": "PASS",
+      "duration_ms": 2095,
+      "details": {
+        "rule_id": 10,
+        "versions": 2
+      }
+    },
+    {
+      "case_id": "CA-07",
+      "requirement": "Predictions par machine",
+      "status": "PASS",
+      "duration_ms": 35,
+      "details": {
+        "prediction_count": 34,
+        "latest_level": "critical"
+      }
+    },
+    {
+      "case_id": "CP-02",
+      "requirement": "Temps de reponse prediction < 200 ms",
+      "status": "PASS",
+      "duration_ms": 110,
+      "details": {
+        "average_duration_ms": 22.17,
+        "samples_ms": [
+          21.7,
+          22.77,
+          21.55,
+          23.04,
+          21.81
+        ]
+      }
+    },
+    {
+      "case_id": "CA-03",
+      "requirement": "Generation des alertes",
+      "status": "FAIL",
+      "duration_ms": 20030,
+      "details": {
+        "error": "timed out"
+      }
+    },
+    {
+      "case_id": "OF-05",
+      "requirement": "Audit et traces de securite",
+      "status": "FAIL",
+      "duration_ms": 20014,
+      "details": {
+        "error": "timed out"
+      }
+    },
+    {
+      "case_id": "OF-01C",
+      "requirement": "Suppression utilisateur",
+      "status": "FAIL",
+      "duration_ms": 20034,
+      "details": {
+        "error": "timed out"
+      }
+    },
+    {
+      "case_id": "CP-01",
+      "requirement": "Temps de chargement dashboard < 2 s",
+      "status": "MANUAL",
+      "duration_ms": 0,
+      "details": {
+        "mode": "manual",
+        "method": "Mesurer dans le navigateur avec DevTools sur / et verifier le chargement initial.",
+        "target": "< 2 s"
+      }
+    },
+    {
+      "case_id": "CP-03",
+      "requirement": "Concurrence 50 utilisateurs",
+      "status": "MANUAL",
+      "duration_ms": 0,
+      "details": {
+        "mode": "manual",
+        "method": "Executer un test de charge externe sur /api/dashboard/summary et /api/predictions/simulate/{machine_id}.",
+        "target": "Pas de degradation visible a 50 utilisateurs"
+      }
+    },
+    {
+      "case_id": "OT-03",
+      "requirement": "Rappel modele >= 80 %",
+      "status": "MANUAL",
+      "duration_ms": 0,
+      "details": {
+        "mode": "manual",
+        "method": "Evaluer le modele sur un jeu de verite terrain et calculer recall, precision, F1 et AUC.",
+        "target": "recall >= 0.80"
+      }
+    },
+    {
+      "case_id": "OT-04",
+      "requirement": "Anticipation moyenne >= 7 jours",
+      "status": "MANUAL",
+      "duration_ms": 0,
+      "details": {
+        "mode": "manual",
+        "method": "Comparer expected_failure_date aux dates reelles de panne sur un jeu de validation.",
+        "target": ">= 7 jours"
+      }
+    },
+    {
+      "case_id": "UI-RESP",
+      "requirement": "Interface responsive",
+      "status": "MANUAL",
+      "duration_ms": 0,
+      "details": {
+        "mode": "manual",
+        "method": "Verifier les ecrans Dashboard, Machines, Regles et Alertes en largeur mobile et desktop.",
+        "sites_hint": [
+          "Site 1",
+          "Site 2"
+        ]
+      }
+    },
+    {
+      "case_id": "NAV-BROWSERS",
+      "requirement": "Compatibilite navigateurs",
+      "status": "MANUAL",
+      "duration_ms": 0,
+      "details": {
+        "mode": "manual",
+        "method": "Tester Chrome, Firefox, Edge et Safari sur connexion, dashboard, CRUD machines, regles et alertes."
+      }
+    }
+  ],
+  "counts": {
+    "pass": 8,
+    "fail": 3,
+    "skip": 0,
+    "manual": 6
+  }
+}

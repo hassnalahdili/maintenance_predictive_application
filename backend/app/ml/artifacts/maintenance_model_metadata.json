@@ -1,0 +1,179 @@
+{
+  "generated_at": "2026-04-24T11:44:10.190679",
+  "model_name": "RandomForest + CalibratedClassifierCV",
+  "feature_names": [
+    "temperature",
+    "pressure",
+    "rpm",
+    "current",
+    "total_vibration",
+    "rule_count",
+    "max_rule_confidence",
+    "severity_score",
+    "temperature_margin_85",
+    "pressure_margin_7",
+    "rpm_drop_margin"
+  ],
+  "feature_means": {
+    "temperature": 74.66604,
+    "pressure": 6.802116,
+    "rpm": 1477.660906,
+    "current": 50.012424,
+    "total_vibration": 7.993617,
+    "rule_count": 0.539167,
+    "max_rule_confidence": 0.365458,
+    "severity_score": 1.270833,
+    "temperature_margin_85": -10.33396,
+    "pressure_margin_7": -0.197884,
+    "rpm_drop_margin": -27.660906
+  },
+  "feature_stds": {
+    "temperature": 8.052337,
+    "pressure": 0.809652,
+    "rpm": 78.506095,
+    "current": 6.071981,
+    "total_vibration": 2.960221,
+    "rule_count": 0.669193,
+    "max_rule_confidence": 0.408788,
+    "severity_score": 1.625397,
+    "temperature_margin_85": 8.052337,
+    "pressure_margin_7": 0.809652,
+    "rpm_drop_margin": 78.506095
+  },
+  "calibration_method": "sigmoid_cv3",
+  "calibration_before": {
+    "precision": 1.0,
+    "recall": 0.9784,
+    "f1": 0.9891,
+    "roc_auc": 1.0,
+    "brier": 0.0055,
+    "ece": 0.0132
+  },
+  "calibration_after": {
+    "precision": 0.9945,
+    "recall": 0.9784,
+    "f1": 0.9864,
+    "roc_auc": 0.9999,
+    "brier": 0.0046,
+    "ece": 0.013
+  },
+  "calibration_bins": [
+    {
+      "bin_label": "0.0-0.1",
+      "count": 410,
+      "average_confidence": 0.0076,
+      "observed_frequency": 0.0
+    },
+    {
+      "bin_label": "0.1-0.2",
+      "count": 3,
+      "average_confidence": 0.1459,
+      "observed_frequency": 0.3333
+    },
+    {
+      "bin_label": "0.2-0.3",
+      "count": 1,
+      "average_confidence": 0.2501,
+      "observed_frequency": 0.0
+    },
+    {
+      "bin_label": "0.3-0.4",
+      "count": 1,
+      "average_confidence": 0.3496,
+      "observed_frequency": 1.0
+    },
+    {
+      "bin_label": "0.4-0.5",
+      "count": 3,
+      "average_confidence": 0.4255,
+      "observed_frequency": 0.6667
+    },
+    {
+      "bin_label": "0.5-0.6",
+      "count": 1,
+      "average_confidence": 0.5188,
+      "observed_frequency": 0.0
+    },
+    {
+      "bin_label": "0.6-0.7",
+      "count": 1,
+      "average_confidence": 0.6883,
+      "observed_frequency": 1.0
+    },
+    {
+      "bin_label": "0.7-0.8",
+      "count": 1,
+      "average_confidence": 0.7195,
+      "observed_frequency": 1.0
+    },
+    {
+      "bin_label": "0.8-0.9",
+      "count": 3,
+      "average_confidence": 0.8627,
+      "observed_frequency": 1.0
+    },
+    {
+      "bin_label": "0.9-1.0",
+      "count": 176,
+      "average_confidence": 0.9944,
+      "observed_frequency": 1.0
+    }
+  ],
+  "global_importance": [
+    {
+      "feature": "rpm",
+      "importance": 0.407321,
+      "normalized_importance": 0.4073
+    },
+    {
+      "feature": "rpm_drop_margin",
+      "importance": 0.334602,
+      "normalized_importance": 0.3346
+    },
+    {
+      "feature": "max_rule_confidence",
+      "importance": 0.051393,
+      "normalized_importance": 0.0514
+    },
+    {
+      "feature": "temperature",
+      "importance": 0.048484,
+      "normalized_importance": 0.0485
+    },
+    {
+      "feature": "severity_score",
+      "importance": 0.043914,
+      "normalized_importance": 0.0439
+    },
+    {
+      "feature": "temperature_margin_85",
+      "importance": 0.041186,
+      "normalized_importance": 0.0412
+    },
+    {
+      "feature": "rule_count",
+      "importance": 0.034796,
+      "normalized_importance": 0.0348
+    },
+    {
+      "feature": "total_vibration",
+      "importance": 0.014608,
+      "normalized_importance": 0.0146
+    },
+    {
+      "feature": "pressure_margin_7",
+      "importance": 0.010302,
+      "normalized_importance": 0.0103
+    },
+    {
+      "feature": "pressure",
+      "importance": 0.008789,
+      "normalized_importance": 0.0088
+    },
+    {
+      "feature": "current",
+      "importance": 0.004604,
+      "normalized_importance": 0.0046
+    }
+  ]
+}

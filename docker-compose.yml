@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:15
+    container_name: predictive_maintenance_db
+    environment:
+      POSTGRES_DB: predictive_maintenance
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: predictive_maintenance_backend
+    environment:
+      APP_ENV: development
+      DATABASE_URL: postgresql+psycopg2://postgres:1234@db:5432/predictive_maintenance
+      SECRET_KEY: dev-secret-key-change-me-please-2026
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      AUTO_CREATE_SCHEMA: "true"
+      AUTO_SEED_DATA: "true"
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: predictive_maintenance_frontend
+    ports:
+      - '5173:5173'
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+
+volumes:
+  postgres_data:

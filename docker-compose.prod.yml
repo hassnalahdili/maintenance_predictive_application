@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:15
+    container_name: predictive_maintenance_db_prod
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: predictive_maintenance_backend_prod
+    restart: unless-stopped
+    env_file:
+      - ./.env.production
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: predictive_maintenance_web_prod
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infra/certs:/etc/nginx/certs:ro
+
+volumes:
+  postgres_prod_data:

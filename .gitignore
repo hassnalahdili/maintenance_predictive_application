@@ -1,0 +1,71 @@
+# ========================
+# ENV & SECRETS 🔒
+# ========================
+.env
+.env.*
+*.env
+
+/.env.production
+backend/.env.production
+frontend/.env.production
+
+# ========================
+# CERTIFICATS 🔐
+# ========================
+infra/certs/*.pem
+infra/certs/*.crt
+infra/certs/*.key
+infra/certs/*.csr
+
+# ========================
+# PYTHON 🐍
+# ========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environnement virtuel (TRÈS IMPORTANT ❗)
+pfe/
+venv/
+env/
+.venv/
+
+# ========================
+# BACKEND (FastAPI)
+# ========================
+backend/__pycache__/
+backend/alembic/versions/__pycache__/
+
+# ========================
+# FRONTEND ⚛️
+# ========================
+frontend/node_modules/
+frontend/dist/
+
+# ========================
+# DATA & ML 📊
+# ========================
+data/
+datasets/
+*.csv
+*.pkl
+*.joblib
+models/
+
+# ========================
+# LOGS
+# ========================
+*.log
+
+# ========================
+# IDE 🧠
+# ========================
+.vscode/
+.idea/
+
+# ========================
+# OS 🖥️
+# ========================
+.DS_Store
+Thumbs.db
