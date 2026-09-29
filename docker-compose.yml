@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: predictive_maintenance
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5432:5432'
     volumes:
@@ -17,7 +17,7 @@ services:
     environment:
       APP_ENV: development
       DATABASE_URL: postgresql+psycopg2://postgres:1234@db:5432/predictive_maintenance
-      SECRET_KEY: dev-secret-key-change-me-please-2026
+      SECRET_KEY: ${SECRET_KEY}
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
       AUTO_CREATE_SCHEMA: "true"
       AUTO_SEED_DATA: "true"
