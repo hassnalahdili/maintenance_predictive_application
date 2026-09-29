@@ -71,11 +71,6 @@ Le mode `development` garde `AUTO_CREATE_SCHEMA=true` pour ne pas casser le lanc
 - `AUTO_CREATE_SCHEMA=false`
 - `AUTO_SEED_DATA=false`
 
-## Compte de test
-
-- Email : admin@example.com
-- Mot de passe : Admin123!
-
 ## Entraîner le modèle IA
 
 Dans le conteneur backend ou localement :
