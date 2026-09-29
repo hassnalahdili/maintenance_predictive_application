@@ -1,267 +1,556 @@
-# Application complète de maintenance prédictive industrielle
+# Application de maintenance prédictive industrielle basée sur l'IA
 
-Cette application respecte l'esprit du cahier des charges :
-- Backend FastAPI
-- Frontend React + Material UI
-- PostgreSQL
-- Authentification JWT
-- Gestion des machines, règles métier, alertes et dashboard
-- Type de machine supplémentaire `four`
-- Règles métier utilisées d'abord pour produire des signaux de risque
-- Résultats des règles transformés en features pour le modèle IA
-- Pipeline ML avec entraînement local et inférence en API
-- Espace ML pour catalogue datasets et benchmarks multi-modèles
-- Migrations de base de données avec Alembic
-- Configuration `development` / `production`
-- Backend proxy-aware avec HTTPS en production
-- Dashboard live par WebSocket
-- Jobs d'ingestion continue simulés ou rejoués
-- Hiérarchie industrielle des actifs et interventions terrain
-- Boucle MLOps avec labels terrain, drift et retraining
+Application développée dans le cadre d'un **Projet de Fin d'Études (PFE)** autour de la maintenance prédictive industrielle.
+
+Le projet propose une plateforme combinant **règles métier, Machine Learning et suivi opérationnel** afin d'exploiter des données de capteurs, détecter des situations à risque et générer des alertes de maintenance.
+
+> **Statut du projet :** prototype fonctionnel développé pour un contexte PFE.
+> Les premières expérimentations ML utilisent notamment des données synthétiques et des jeux de données publics. Les performances obtenues avec les données synthétiques ne constituent donc pas une validation industrielle sur des machines réelles.
+
+---
+
+## Fonctionnalités principales
+
+L'application intègre :
+
+* Backend **FastAPI**
+* Frontend **React + Material UI**
+* Base de données **PostgreSQL**
+* Authentification **JWT**
+* Gestion des machines et des actifs industriels
+* Gestion des règles métier
+* Ingestion des données capteurs
+* Détection de situations à risque
+* Génération et historisation des alertes
+* Prédiction de la probabilité de défaillance
+* Dashboard avec indicateurs de suivi
+* WebSocket pour les mises à jour en temps réel
+* Gestion des interventions terrain
+* Jobs d'ingestion continue simulés ou rejoués
+* Pipeline ML avec entraînement local et inférence via API
+* Catalogue de datasets et benchmarks ML
+* Diagnostics et calibration du modèle
+* Suivi du drift
+* Retraining à partir des retours terrain
+* Migrations de base de données avec Alembic
+* Configurations `development` et `production`
+* Déploiement HTTPS en production
+
+---
 
 ## Architecture
 
-1. Les utilisateurs se connectent via JWT.
-2. Les machines sont gérées depuis l'interface.
-3. Les données capteurs sont ingérées dans PostgreSQL.
-4. Les règles métier sont évaluées en premier.
-5. Les résultats des règles sont transformés en features enrichies.
-6. Le modèle IA prédit la probabilité de panne à partir de ces features.
+Le pipeline général de l'application est organisé comme suit :
+
+```text
+Données capteurs
+       ↓
+PostgreSQL
+       ↓
+Règles métier
+       ↓
+Features enrichies
+       ↓
+Modèle Machine Learning
+       ↓
+Probabilité de défaillance
+       ↓
+Alertes
+       ↓
+Dashboard / Interventions
+       ↓
+Labels terrain
+       ↓
+Suivi ML / Drift / Retraining
+```
+
+### Fonctionnement
+
+1. Les utilisateurs se connectent via une authentification JWT.
+2. Les machines et les actifs industriels sont gérés depuis l'interface.
+3. Les données provenant des capteurs sont enregistrées dans PostgreSQL.
+4. Les règles métier sont évaluées en premier afin d'identifier les situations à risque.
+5. Les résultats des règles sont transformés en variables utilisables par le modèle ML.
+6. Le modèle prédit une probabilité de défaillance.
 7. Les alertes sont générées et historisées.
-8. Le dashboard affiche les KPIs principaux.
-9. Le flux live notifie le frontend dès qu'une nouvelle mesure ou intervention arrive.
-10. Les interventions terrain servent de labels pour la boucle ML.
+8. Le dashboard présente les principaux indicateurs.
+9. Le WebSocket permet de transmettre les nouveaux événements au frontend en temps réel.
+10. Les interventions terrain peuvent fournir des labels utilisés dans la boucle d'amélioration du modèle.
 
-## Documentation interface
+---
 
-Un guide complet, page par page, est disponible ici :
+## Architecture technique
 
-- [docs/guide_interface_pages.md](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/docs/guide_interface_pages.md)
-- [docs/fonctionnalites_ajoutees.md](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/docs/fonctionnalites_ajoutees.md)
+| Composant                | Technologie             |
+| ------------------------ | ----------------------- |
+| Backend                  | FastAPI / Python        |
+| Frontend                 | React / Material UI     |
+| Base de données          | PostgreSQL              |
+| Machine Learning         | Scikit-learn            |
+| Authentification         | JWT                     |
+| Migrations               | Alembic                 |
+| Conteneurisation         | Docker / Docker Compose |
+| Communication temps réel | WebSocket               |
+| Gestion des données      | Pandas / NumPy          |
 
-## Lancer le projet avec Docker
+---
+
+## Documentation
+
+La documentation complémentaire se trouve dans le dossier `docs/`.
+
+* `docs/guide_interface_pages.md`
+* `docs/fonctionnalites_ajoutees.md`
+
+---
+
+## Installation avec Docker
+
+Depuis la racine du projet :
 
 ```bash
-cd predictive_maintenance_app
 docker compose up --build
 ```
 
-- Frontend : http://localhost:5173
-- Backend : http://localhost:8000/docs
-- PostgreSQL : localhost:5432
+Services disponibles en développement :
 
-## Alembic et migrations
+* Frontend : `http://localhost:5173`
+* Backend : `http://localhost:8000`
+* Documentation API : `http://localhost:8000/docs`
+* PostgreSQL : `localhost:5432`
 
-Les migrations sont maintenant gérées avec Alembic dans `backend/alembic/`.
+---
 
-Depuis `backend/` :
+## Base de données et migrations
+
+Les migrations sont gérées avec **Alembic** dans :
+
+```text
+backend/alembic/
+```
+
+Pour appliquer les migrations :
 
 ```bash
+cd backend
 alembic upgrade head
 ```
 
-Pour une base déjà existante que vous voulez raccorder à Alembic sans rejouer la migration initiale :
+Pour rattacher une base existante à l'état courant d'Alembic sans rejouer les migrations :
 
 ```bash
 alembic stamp head
 ```
 
-Le mode `development` garde `AUTO_CREATE_SCHEMA=true` pour ne pas casser le lancement local, mais en production il faut laisser :
+En développement, `AUTO_CREATE_SCHEMA=true` peut être utilisé pour faciliter le démarrage local.
 
-- `AUTO_CREATE_SCHEMA=false`
-- `AUTO_SEED_DATA=false`
+En production :
 
-## Entraîner le modèle IA
+```text
+AUTO_CREATE_SCHEMA=false
+AUTO_SEED_DATA=false
+```
 
-Dans le conteneur backend ou localement :
+---
+
+## Entraînement du modèle
+
+Le modèle peut être entraîné localement depuis le dossier `backend` :
 
 ```bash
 cd backend
 python -m app.ml.train_model
 ```
 
-Cela crée :
-- `backend/app/ml/artifacts/maintenance_model.joblib`
-- `backend/app/ml/artifacts/maintenance_scaler.joblib`
+Le script génère actuellement un **jeu de données synthétique** afin de tester le pipeline de maintenance prédictive.
 
-## Endpoints principaux
+Le processus comprend :
 
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET/POST /api/machines/`
-- `GET/POST /api/rules/`
-- `POST /api/sensors/ingest`
-- `GET /api/alerts/`
-- `POST /api/alerts/{id}/acknowledge`
-- `GET /api/predictions/`
-- `POST /api/predictions/simulate/{machine_id}`
-- `GET /api/dashboard/summary`
-- `GET /api/assets/tree`
-- `GET/POST /api/interventions/`
-- `GET/POST /api/ingestion-jobs/`
-- `POST /api/ingestion-jobs/{id}/start`
-- `POST /api/ingestion-jobs/{id}/stop`
-- `GET /api/ml/overview`
-- `GET /api/ml/replay/sources`
-- `POST /api/ml/replay/step`
-- `POST /api/ml/replay/reset/{source_id}`
-- `GET /api/ml/feedback-summary`
-- `GET /api/ml/drift-report`
-- `GET /api/ml/business-metrics`
-- `GET /api/ml/model-diagnostics`
-- `GET /api/ml/explain/machines/{machine_id}`
-- `POST /api/ml/retrain-from-feedback`
-- `WS /ws/live?token=...`
+1. génération des mesures capteurs ;
+2. application des règles métier ;
+3. création des variables dérivées ;
+4. génération de la variable cible synthétique ;
+5. séparation entraînement/test ;
+6. entraînement du Random Forest ;
+7. calibration des probabilités ;
+8. calcul des diagnostics ;
+9. sauvegarde du modèle et du scaler.
 
-## Secrets et environnements
+### Important concernant les données
 
-Fichiers fournis :
+Les données synthétiques servent principalement à valider le fonctionnement technique du pipeline.
 
-- [backend/.env.example](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/backend/.env.example)
-- [backend/.env.production.example](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/backend/.env.production.example)
-- [.env.production.example](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/.env.production.example)
-- [frontend/.env.production.example](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/frontend/.env.production.example)
+La variable `failure` est elle-même générée à partir d'un score de risque défini dans le projet. Les performances obtenues sur ces données ne doivent donc pas être interprétées comme une mesure de performance sur des défaillances industrielles réelles.
 
-Pour générer un secret fort :
+Le projet prévoit également l'utilisation de **jeux de données publics** pour les expérimentations et benchmarks.
+
+Les artefacts principaux générés par l'entraînement sont :
+
+```text
+backend/app/ml/artifacts/maintenance_model.joblib
+backend/app/ml/artifacts/maintenance_scaler.joblib
+```
+
+---
+
+## Logique métier et Machine Learning
+
+Le projet utilise une approche en deux niveaux.
+
+### 1. Règles métier
+
+Les règles permettent d'identifier rapidement des situations potentiellement anormales à partir des mesures des capteurs.
+
+Elles produisent notamment :
+
+* nombre de règles déclenchées ;
+* score de sévérité ;
+* niveau de confiance maximal ;
+* dépassement des seuils ;
+* marges par rapport aux seuils de référence.
+
+### 2. Modèle Machine Learning
+
+Les résultats des règles sont ensuite transformés en variables d'entrée du modèle.
+
+Parmi les features utilisées :
+
+```text
+temperature
+pressure
+rpm
+current
+total_vibration
+rule_count
+max_rule_confidence
+severity_score
+temperature_margin_85
+pressure_margin_7
+rpm_drop_margin
+```
+
+Le modèle exploite ainsi à la fois les **mesures capteurs** et les **informations issues des règles métier**.
+
+---
+
+## Datasets et benchmarks
+
+Les données utilisées dans les expérimentations sont organisées dans :
+
+```text
+data/raw/
+```
+
+avec un dossier par source lorsque cela est nécessaire.
+
+Les datasets volumineux et les données externes ne sont pas destinés à être versionnés directement dans le dépôt Git.
+
+Le projet peut construire un catalogue et des rapports de benchmark dans :
+
+```text
+data/reports/dataset_catalog.json
+data/reports/ml_overview.json
+```
+
+Les jeux de données étudiés comprennent notamment :
+
+* `CWRU Bearing Features`
+* `Hydraulic Systems`
+* `Vibration Feature Dataset`
+* `IMS Bearing RUL`
+* `Electric Arc Furnace`
+
+D'autres sources telles que `MetroPT-3`, `Pump time series` et les données audio `fan` sont prévues pour le rejeu de séries temporelles ou les prochaines itérations du projet.
+
+---
+
+## Benchmarks ML
+
+Le projet permet de comparer plusieurs approches selon les caractéristiques des datasets disponibles, notamment pour :
+
+* classification ;
+* détection d'anomalies ;
+* régression ;
+* estimation de durée de vie restante lorsque les données le permettent.
+
+Pour regénérer les rapports ML, utiliser le script de benchmark présent dans :
+
+```text
+qa/run_ml_benchmarks.py
+```
+
+Les résultats peuvent ensuite être exploités depuis l'interface ML.
+
+---
+
+## Interface ML
+
+La page `ML` permet notamment de consulter :
+
+* le catalogue des datasets ;
+* les résultats des benchmarks ;
+* les diagnostics du modèle utilisé ;
+* la calibration des probabilités ;
+* les importances des variables ;
+* les métriques liées aux alertes et interventions ;
+* l'explication locale d'une prédiction ;
+* le rejeu de séries temporelles disponibles ;
+* les informations nécessaires aux prochaines itérations du PFE.
+
+---
+
+## Operations et boucle MLOps
+
+La page `Operations` regroupe les fonctionnalités opérationnelles :
+
+* hiérarchie des actifs :
+
+```text
+Site
+  ↓
+Zone
+  ↓
+Ligne
+  ↓
+Composant
+```
+
+* interventions terrain ;
+* labels métier ;
+* jobs d'ingestion ;
+* suivi du drift ;
+* retraining à partir des retours terrain.
+
+Cette organisation permet de préparer une boucle d'amélioration progressive du modèle à partir des observations et interventions réalisées sur le terrain.
+
+---
+
+## API principale
+
+### Authentification
+
+```text
+POST /api/auth/register
+POST /api/auth/login
+```
+
+### Machines et règles
+
+```text
+GET/POST /api/machines/
+GET/POST /api/rules/
+```
+
+### Données capteurs et alertes
+
+```text
+POST /api/sensors/ingest
+GET /api/alerts/
+POST /api/alerts/{id}/acknowledge
+```
+
+### Prédictions
+
+```text
+GET /api/predictions/
+POST /api/predictions/simulate/{machine_id}
+```
+
+### Dashboard
+
+```text
+GET /api/dashboard/summary
+```
+
+### Actifs et interventions
+
+```text
+GET /api/assets/tree
+GET/POST /api/interventions/
+```
+
+### Ingestion
+
+```text
+GET/POST /api/ingestion-jobs/
+POST /api/ingestion-jobs/{id}/start
+POST /api/ingestion-jobs/{id}/stop
+```
+
+### Machine Learning
+
+```text
+GET /api/ml/overview
+GET /api/ml/replay/sources
+POST /api/ml/replay/step
+POST /api/ml/replay/reset/{source_id}
+
+GET /api/ml/feedback-summary
+GET /api/ml/drift-report
+GET /api/ml/business-metrics
+GET /api/ml/model-diagnostics
+
+GET /api/ml/explain/machines/{machine_id}
+POST /api/ml/retrain-from-feedback
+```
+
+### Temps réel
+
+```text
+WS /ws/live?token=...
+```
+
+---
+
+## Sécurité et gestion des environnements
+
+Le projet fournit des fichiers d'exemple pour les différents environnements :
+
+```text
+backend/.env.example
+backend/.env.production.example
+.env.production.example
+frontend/.env.production.example
+```
+
+Les secrets réels doivent être stockés dans les fichiers d'environnement locaux et **ne doivent pas être versionnés dans Git**.
+
+Pour générer un secret :
 
 ```bash
 cd backend
 python scripts/generate_secret.py
 ```
 
-En `production`, l'application refuse de démarrer si :
+En production, plusieurs contrôles empêchent un démarrage avec une configuration dangereuse, notamment lorsque :
 
-- `SECRET_KEY` est trop faible
-- `ENFORCE_HTTPS=false`
-- `AUTO_CREATE_SCHEMA=true`
-- `AUTO_SEED_DATA=true`
-
-## Base de données
-
-Tables principales :
-- users
-- machines
-- business_rules
-- asset_nodes
-- sensor_data
-- alerts
-- predictions
-- maintenance_interventions
-- ingestion_jobs
-
-## Logique métier et IA
-
-Le projet suit bien la logique demandée :
-
-### Phase initiale
-Les règles métier produisent :
-- alertes simples
-- score de sévérité
-- nombre de règles déclenchées
-- confiance maximale
-- marges par rapport aux seuils
-
-### Phase IA
-Ces résultats deviennent des features d'entrée du modèle :
-- `rule_count`
-- `severity_score`
-- `max_rule_confidence`
-- `temperature_margin_85`
-- `pressure_margin_7`
-- `rpm_drop_margin`
-- etc.
-
-Le modèle apprend donc à partir des mesures capteurs + intelligence métier transformée.
-
-## Datasets et benchmarks PFE
-
-Les données brutes attendues sont placées dans `data/raw/`, un dossier par source.
-
-Cette version détecte automatiquement les datasets présents et construit un rapport ML dans :
-
-- `data/reports/dataset_catalog.json`
-- `data/reports/ml_overview.json`
-
-Elle prépare et benchmarke automatiquement les jeux exploitables déjà présents :
-
-- `CWRU Bearing Features`
-- `Hydraulic Systems`
-- `Vibration Feature Dataset`
-- `IMS Bearing RUL`
-- `Electric Arc Furnace`
-
-Les jeux `MetroPT-3`, `Pump time series` et les jeux audio `fan` restent disponibles pour le rejeu temps réel ou les prochaines itérations de l'étude.
-
-Pour regénérer le rapport ML :
-
-```powershell
-.\pfe\Scripts\python.exe .\qa\run_ml_benchmarks.py
+```text
+SECRET_KEY
+ENFORCE_HTTPS
+AUTO_CREATE_SCHEMA
+AUTO_SEED_DATA
 ```
 
-Dans l'interface, la page `ML` affiche :
+ne respectent pas les paramètres attendus pour un environnement de production.
 
-- le catalogue des datasets détectés
-- les benchmarks classification / anomaly detection / regression
-- les modèles gagnants par dataset
-- les diagnostics du modèle en service
-- la calibration avant / après et la courbe de calibration
-- les importances globales des variables
-- les métriques métier dérivées des alertes et interventions
-- l'explication locale de la dernière prédiction d'une machine
-- le rejeu temps réel de vraies séries `pompe`, `compresseur` et `four`
-- les prochaines recommandations pour la suite du PFE
+---
 
-La page `Operations` centralise :
+## Déploiement HTTPS
 
-- la hiérarchie des actifs `site > zone > ligne > composant`
-- les interventions terrain et leurs labels métier
-- les jobs d'ingestion continue
-- le rapport de drift
-- le retraining à partir des retours terrain
+Un environnement de production séparé est disponible avec :
 
-Le dashboard principal est maintenant branché sur un WebSocket (`/ws/live`) pour se rafraîchir dès qu'un signal ou une intervention est enregistré.
+```text
+docker-compose.prod.yml
+```
 
-## Déploiement production HTTPS
+Il utilise notamment :
 
-Un stack production séparé est disponible dans [docker-compose.prod.yml](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/docker-compose.prod.yml).
+```text
+backend/Dockerfile.prod
+backend/start-prod.sh
+frontend/Dockerfile.prod
+frontend/nginx.prod.conf
+```
 
-Il utilise :
+### Configuration
 
-- [backend/Dockerfile.prod](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/backend/Dockerfile.prod)
-- [backend/start-prod.sh](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/backend/start-prod.sh)
-- [frontend/Dockerfile.prod](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/frontend/Dockerfile.prod)
-- [frontend/nginx.prod.conf](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/frontend/nginx.prod.conf)
+Créer le fichier :
 
-Étapes :
+```text
+.env.production
+```
 
-1. créer `.env.production` à partir de [.env.production.example](C:/Users/HASSNA/Master/stage/predictive_maintenance_app/predictive_maintenance_app/.env.production.example)
-2. déposer vos certificats TLS dans `infra/certs/`
-3. lancer :
+à partir de :
+
+```text
+.env.production.example
+```
+
+Les certificats TLS doivent être placés dans :
+
+```text
+infra/certs/
+```
+
+Puis lancer :
 
 ```bash
 docker compose -f docker-compose.prod.yml --env-file .env.production up --build -d
 ```
 
-Le frontend est alors servi en HTTPS, et `/api` ainsi que `/ws` sont proxyfiés vers le backend.
+Le frontend est servi en HTTPS et les routes `/api` et `/ws` sont proxyfiées vers le backend.
 
-## Limites actuelles
+---
 
-Cette version est complète et fonctionnelle pour un PFE, mais peut encore être enrichie avec :
-- Celery/Redis pour batchs et alertes asynchrones
-- vrais graphiques avancés
-- export PDF/CSV
-- supervision multi-instance des jobs d'ingestion
-- modèle XGBoost et RUL plus avancé
+## Structure principale du projet
 
-## Recette et conformité
-
-Le plan de recette et le runner automatique sont disponibles dans :
-
-- `qa/plan_recette.md`
-- `qa/run_recette.py`
-
-Exemple d'execution :
-
-```powershell
-.\pfe\Scripts\python.exe .\qa\run_recette.py --start-db --output .\qa\reports\recette_report.json
+```text
+.
+├── backend/
+│   ├── app/
+│   │   ├── ml/
+│   │   └── ...
+│   ├── alembic/
+│   └── ...
+├── frontend/
+├── data/
+│   ├── raw/
+│   └── reports/
+├── docs/
+├── qa/
+├── infra/
+├── docker-compose.yml
+└── docker-compose.prod.yml
 ```
+
+---
+
+## Limites actuelles et perspectives
+
+Le projet constitue un **prototype fonctionnel de PFE** et peut encore évoluer vers un environnement industriel plus complet.
+
+Les principales pistes d'amélioration sont :
+
+* intégration de données industrielles réelles et labellisées ;
+* validation du modèle sur des données indépendantes ;
+* comparaison avec des modèles supplémentaires comme XGBoost ;
+* modèles dédiés à l'estimation du RUL ;
+* traitement asynchrone avec Celery/Redis ;
+* supervision avancée des jobs d'ingestion ;
+* enrichissement des visualisations ;
+* export des données et rapports en PDF/CSV.
+
+---
+
+## Tests et recette
+
+Le projet contient un plan de recette et un runner automatique dans :
+
+```text
+qa/plan_recette.md
+qa/run_recette.py
+```
+
+Exemple :
+
+```bash
+python qa/run_recette.py --start-db --output qa/reports/recette_report.json
+```
+
+---
+
+## Objectif du projet
+
+L'objectif est de construire une plateforme permettant d'expérimenter une approche complète de **maintenance prédictive basée sur l'IA**, depuis l'acquisition des données jusqu'à la prédiction, la génération d'alertes et l'exploitation des retours terrain.
+
+Le projet met ainsi en pratique plusieurs domaines :
+
+* Data Science ;
+* Machine Learning ;
+* traitement des données ;
+* développement d'API ;
+* bases de données ;
+* visualisation ;
+* déploiement avec Docker ;
+* sécurité applicative ;
+* premiers principes de MLOps.
